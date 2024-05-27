@@ -3,6 +3,8 @@ import pandas as pd
 import xml.etree.ElementTree as et
 from io import StringIO
 import csv
+
+
 def csv_to_df(file):
     stringio = StringIO(file.getvalue().decode("utf-8"))
     csv.register_dialect("semicolon", delimiter=";")
@@ -23,6 +25,8 @@ def csv_to_df(file):
     df = pd.DataFrame(mark_sum.items(), columns=["Littera", file.name])
     df["Littera"] = df["Littera"].astype(str)
     return df
+
+
 def xml_to_df(file):
     stringio = StringIO(file.getvalue().decode("utf-8"))
     element_tree = et.parse(stringio)
@@ -38,12 +42,16 @@ def xml_to_df(file):
     df = pd.DataFrame(mark_sum.items(), columns=["Littera", file.name])
     df["Littera"] = df["Littera"].astype(str)
     return df
+
+
 def check_equality(df):
     number_columns = df.drop("Littera", axis=1)
     equal = number_columns.eq(number_columns.iloc[:, 0], axis=0)
     all_equal = equal.transpose().all().transpose()
     all_equal.name = "Lika"
     return df.join(all_equal, how="left")
+
+
 # Create an empty DataFrame with column names and data types
 schema = {"Littera": "str"}
 df_main = pd.DataFrame(columns=schema.keys()).astype(schema)
@@ -59,7 +67,6 @@ if uploaded_files:
             xml_df = xml_to_df(file)
             df_main = df_main.merge(xml_df, how="outer", on="Littera")
 
-df_main = check_equality(df_main)
     df_main = check_equality(df_main)
 
 
@@ -70,6 +77,8 @@ def highlight_diff(s):
         if s.Lika
         else ["background-color: salmon"] * len(s)
     )
+
+
 # fixa formatering
 # df_main = df_main.astype(int, errors="ignore")
 # df_main["Littera"] = df_main["Littera"].astype(str)
