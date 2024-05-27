@@ -12,12 +12,13 @@ def csv_to_df(file):
     mark_sum = {}
     for row in reader:
         try:
-            mark = int(row[0])
+            mark_int = int(row[0])
         except:
-            mark = 0
+            mark_int = 0
             continue
-        if mark > 0:  # Bara rader med data
+        if mark_int > 0:  # Bara rader med data
             n = int(row[1])
+            mark = row[0]
             if mark in mark_sum:
                 mark_sum[mark] += n
             else:
