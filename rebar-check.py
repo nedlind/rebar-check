@@ -37,6 +37,8 @@ def xml_to_df(file):
     # Extract data from each B2aPageRow
     for b2a_row in root.findall(".//B2aPageRow"):
         mark = b2a_row.find(".//Litt").text
+        if not mark:
+            continue
         n_grps = b2a_row.find(".//NoGrps").text
         bars_per_grp = b2a_row.find(".//NoStpGrp").text
         mark_sum[mark] = int(n_grps) * int(bars_per_grp)
