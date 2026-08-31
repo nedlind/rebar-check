@@ -63,10 +63,11 @@ uploaded_files = st.sidebar.file_uploader("Ladda upp filer", accept_multiple_fil
 # Visa de uppladdade filerna
 if uploaded_files:
     for file in uploaded_files:
-        if file.name[-3:] == "csv":
+        extension = file.name.rsplit(".", 1)[-1].lower()
+        if extension == "csv":
             csv_df = csv_to_df(file)
             df_main = df_main.merge(csv_df, how="outer", on="Littera")
-        if file.name[-3:] == "xml":
+        if extension == "xml":
             xml_df = xml_to_df(file)
             df_main = df_main.merge(xml_df, how="outer", on="Littera")
 
