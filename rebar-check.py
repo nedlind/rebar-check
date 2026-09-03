@@ -3,6 +3,7 @@ import pandas as pd
 import xml.etree.ElementTree as et
 from io import StringIO
 import csv
+import re
 
 
 def csv_to_df(file):
@@ -11,18 +12,17 @@ def csv_to_df(file):
     reader = csv.reader(stringio, dialect="semicolon")
     mark_sum = {}
     for row in reader:
-        try:
-            mark_int = int(row[0])
-        except:
-            mark_int = 0
+        if len(row) < 2:
             continue
-        if mark_int > 0:  # Bara rader med data
-            n = int(row[1])
-            mark = row[0]
-            if mark in mark_sum:
-                mark_sum[mark] += n
-            else:
-                mark_sum[mark] = n
+        mark = row[0].strip()
+        mark_match = re.fullmatch(r"(\d+)[A-Za-z]*", mark)
+        if not mark_match or int(mark_match.group(1)) <= 0:
+            continue
+        n = int(row[1])
+        if mark in mark_sum:
+            mark_sum[mark] += n
+        else:
+            mark_sum[mark] = n
     df = pd.DataFrame(mark_sum.items(), columns=["Littera", file.name])
     df["Littera"] = df["Littera"].astype(str)
     return df
